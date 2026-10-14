@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 bg-gradient-to-br from-slate-950 via-indigo-950/20 to-slate-900 text-white min-h-screen flex flex-col font-sans">
+    
+    <nav class="w-full bg-white/5 backdrop-blur-md border-b border-white/10 px-8 py-4 flex justify-between items-center shadow-lg">
+        <h1 class="text-xl font-bold tracking-wider text-emerald-400">Smart<span class="text-white">Attendance</span></h1>
+        <a href="/logout" class="text-sm font-medium text-slate-400 hover:text-white transition duration-200">Log Out</a>
+    </nav>
+
+    <main class="flex-grow flex items-center justify-center p-6 flex-col">
+        <!-- Check-In Box -->
+        <div class="bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-10 max-w-md w-full text-center transform transition-all mb-8">
+            
+            <h2 class="text-3xl font-semibold mb-2">Check In</h2>
+            <p class="text-slate-400 text-sm mb-8">Enter the 6-digit session PIN from your teacher.</p>
+
+            <!-- Success/Error Alerts -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                    <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm rounded-xl p-3 mb-6">
+                      {{ message }}
+                    </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            
+            <form action="/attendance/join" method="POST" class="space-y-6">
+                <div>
+                    <input type="text" name="pin" maxlength="6" pattern="\d{6}" required
+                        class="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-4 text-center text-4xl tracking-widest text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition"
+                        placeholder="------">
+                </div>
+                
+                <button type="submit" 
+                    class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-4 px-4 rounded-xl transition duration-300 shadow-lg shadow-emerald-500/20 tracking-wide">
+                    Mark Present
+                </button>
+            </form>
+        </div>
+
+        <!-- Live Attendance History Table -->
+        <div class="max-w-md w-full bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl">
+            <h3 class="text-lg font-semibold text-emerald-400 mb-4 text-left border-b border-white/10 pb-2">Your Attendance History</h3>
+            
+            {% if attendance %}
+                <ul class="space-y-3 text-left">
+                {% for record in attendance %}
+                    <li class="flex justify-between items-center text-sm bg-slate-950/50 p-3 rounded-lg border border-white/5">
+                        <span class="text-slate-300 font-medium">{{ record.session_title }}</span>
+                        <span class="text-emerald-500 font-bold px-2 py-1 bg-emerald-500/10 rounded text-xs uppercase tracking-wider">{{ record.status }}</span>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-slate-500 text-sm text-left">No classes attended yet.</p>
+            {% endif %}
+        </div>
+    </main>
+
+</body>
+</html>

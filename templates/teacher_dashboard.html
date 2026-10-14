@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 bg-gradient-to-br from-slate-950 via-indigo-950/20 to-slate-900 text-white min-h-screen flex flex-col font-sans">
+    
+    <nav class="w-full bg-white/5 backdrop-blur-md border-b border-white/10 px-8 py-4 flex justify-between items-center shadow-lg">
+        <h1 class="text-xl font-bold tracking-wider text-emerald-400">Smart<span class="text-white">Attendance</span></h1>
+        <a href="/logout" class="text-sm font-medium text-slate-400 hover:text-white transition duration-200">Log Out</a>
+    </nav>
+
+    <main class="flex-grow flex items-center justify-start p-6 flex-col pt-12">
+        <div class="bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
+            
+            <h2 class="text-3xl font-semibold mb-2">Dashboard</h2>
+            <p class="text-slate-400 text-sm mb-8">Initiate a live session to generate a dynamic attendance PIN.</p>
+
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs rounded-xl p-3 mb-6 font-mono">
+                  {{ messages[0] }}
+                </div>
+              {% endif %}
+            {% endwith %}
+            
+            <form action="/sessions/start" method="POST" class="mb-8">
+                <button type="submit" 
+                    class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-4 px-4 rounded-xl transition duration-300 shadow-lg shadow-emerald-500/20 tracking-wide">
+                    Start Real Class Session
+                </button>
+            </form>
+            
+            {% if sessions and sessions[0].is_active %}
+            <div class="bg-slate-950/50 border border-white/5 rounded-2xl p-8 mb-4">
+                <p class="text-xs text-slate-500 uppercase tracking-widest mb-3 font-semibold">Active Database PIN</p>
+                <div class="text-6xl font-black text-white tracking-widest mb-4 drop-shadow-md">
+                    {{ sessions[0].pin }}
+                </div>
+                <div class="text-emerald-400 font-mono text-sm font-bold animate-pulse">
+                    Session Active
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Past Classes & CSV Export Section -->
+        <div class="max-w-md w-full bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl mt-8">
+            <h3 class="text-lg font-semibold text-emerald-400 mb-4 border-b border-white/10 pb-2">Attendance Records</h3>
+            
+            {% if sessions %}
+                <ul class="space-y-4">
+                {% for s in sessions %}
+                    <li class="flex justify-between items-center bg-slate-950/50 p-4 rounded-lg border border-white/5">
+                        <div class="text-left">
+                            <p class="text-white text-sm font-medium">{{ s.title }}</p>
+                            <p class="text-slate-400 text-xs">{{ s.checked_in }} students present</p>
+                        </div>
+                        <a href="/export/{{ s.id }}" class="bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold py-2 px-3 rounded shadow transition">
+                            CSV Excel
+                        </a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-slate-500 text-sm">No past sessions found.</p>
+            {% endif %}
+        </div>
+    </main>
+
+</body>
+</html>

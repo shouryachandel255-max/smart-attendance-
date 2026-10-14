@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login | Smart Attendance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-950 bg-gradient-to-br from-slate-950 via-indigo-950/20 to-slate-900 text-white min-h-screen flex items-center justify-center p-6 font-sans">
+    <div class="bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-10 max-w-md w-full">
+      <div class="text-center mb-8">
+        <h1 class="text-2xl font-bold tracking-wider text-emerald-400 mb-2">Smart<span class="text-white">Attendance</span></h1>
+        <p class="text-slate-400 text-sm">Sign in with your institutional credentials</p>
+      </div>
+
+      <!-- Flash error alerts -->
+      {% with messages=get_flashed_messages() %}
+        {% if messages %}
+          <div class="bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs rounded-xl p-3 mb-6 text-center">{{ messages.0 }}</div>
+        {% endif %}
+      {% endwith %}
+
+      <form action="/login" method="POST" class="space-y-5">
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">Username</label>
+          <input type="text" name="username" required class="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 transition" placeholder="teacher or student" />
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">Password</label>
+          <input type="password" name="password" required class="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 transition" placeholder="••••••••" />
+        </div>
+
+        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3.5 px-4 rounded-xl transition duration-300 shadow-lg shadow-emerald-500/20 tracking-wide mt-2">Sign In</button>
+      </form>
+    </div>
+  </body>
+</html>
